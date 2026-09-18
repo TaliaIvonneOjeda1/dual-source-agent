@@ -164,3 +164,5 @@ v1 es deliberadamente chica: Python, FastAPI, SQLite, Gemini function calling. S
 ## Stack
 
 Python 3.12+ (probado en 3.14), FastAPI, httpx, sqlite3, Pydantic, `google-genai`.
+
+Licencia MIT.
