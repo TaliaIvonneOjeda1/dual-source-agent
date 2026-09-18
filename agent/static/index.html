@@ -140,7 +140,20 @@
     .action.none { background: #f0fdf4; border-color: #bbf7d0; }
     .err { color: #b91c1c; }
     .hint { color: var(--muted); font-size: 0.9rem; }
-    footer { color: var(--muted); font-size: 0.82rem; padding: 0.9rem 0.2rem 0; }
+    footer {
+      margin-top: 1.1rem;
+      padding: 0.95rem 1.1rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    footer .who { color: var(--ink); font-weight: 650; }
+    footer .links { display: flex; flex-wrap: wrap; gap: 0.45rem 1rem; margin-top: 0.4rem; }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    footer .note { margin: 0.55rem 0 0; font-size: 0.78rem; }
   </style>
 </head>
 <body>
@@ -166,7 +179,16 @@
         <p class="hint">Elegí un atajo o escribí una pregunta. El resultado es un Finding (acta), no un chat.</p>
       </section>
     </div>
-    <footer>Solo lectura. Datos sintéticos. Si Gemini está saturado vas a ver un 503: reintentá.</footer>
+    <footer>
+      <div class="who">Talia Ivonne Ojeda · analista funcional y desarrolladora full stack · Buenos Aires</div>
+      <div class="links">
+        <a href="mailto:ivonnetalia17@gmail.com">ivonnetalia17@gmail.com</a>
+        <a href="https://taliaivonneojeda1.github.io/" target="_blank" rel="noopener">CV / portfolio</a>
+        <a href="https://www.linkedin.com/in/taliaivonneojeda/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/TaliaIvonneOjeda1/dual-source-agent" target="_blank" rel="noopener">Este repo</a>
+      </div>
+      <p class="note">Solo lectura. Datos sintéticos. Si Gemini está saturado vas a ver un 503: reintentá.</p>
+    </footer>
   </main>
   <script>
     const q = document.getElementById("q");
