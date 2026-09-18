@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import httpx
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
@@ -13,6 +14,8 @@ from pydantic import BaseModel, Field, ValidationError
 from agent.guards import QUERY_MAX, RateLimiter, gemini_key_set, safe_db_path, erp_base_url, GuardError
 from agent.llm import run_query
 
+ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(ROOT / ".env")
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 QUERY_LIMITER = RateLimiter(max_calls=10, window_s=60.0)
 
