@@ -40,15 +40,25 @@
       font-size: 1.35rem;
       font-weight: 650;
     }
-    header p { margin: 0; color: #94a3b8; max-width: 46rem; }
-    .wrap { max-width: 52rem; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+    header p { margin: 0; color: #94a3b8; max-width: 52rem; }
+    .wrap { max-width: 72rem; margin: 0 auto; padding: 1.1rem 1.25rem 2rem; }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(18rem, 0.95fr) minmax(22rem, 1.15fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+    }
     .panel {
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: 12px;
       padding: 1rem 1.1rem 1.15rem;
-      margin-bottom: 1rem;
+      margin: 0;
     }
+    #out { min-height: 16rem; }
     label { display: block; font-weight: 600; margin-bottom: 0.4rem; }
     textarea {
       width: 100%;
@@ -130,7 +140,7 @@
     .action.none { background: #f0fdf4; border-color: #bbf7d0; }
     .err { color: #b91c1c; }
     .hint { color: var(--muted); font-size: 0.9rem; }
-    footer { color: var(--muted); font-size: 0.82rem; padding: 0 0.2rem; }
+    footer { color: var(--muted); font-size: 0.82rem; padding: 0.9rem 0.2rem 0; }
   </style>
 </head>
 <body>
@@ -140,20 +150,22 @@
   </header>
   <main class="wrap">
     <p class="ready" id="ready">Chequeando ERP y agente…</p>
-    <section class="panel">
-      <label for="q">Pregunta de verificación</label>
-      <textarea id="q" placeholder="Ej: Verifica el mail del contacto 501 entre API y SQL"></textarea>
-      <div class="chips">
-        <button type="button" class="chip" data-q="Verifica el mail del contacto 501 entre API y SQL">501 mail</button>
-        <button type="button" class="chip" data-q="Verifica si la factura FC A 0003-00001890 existe en API y en SQL">Factura 404</button>
-        <button type="button" class="chip" data-q="Verifica el importe de la factura FC A 0001-00004500 entre API y SQL">Importe</button>
-        <button type="button" class="chip" data-q="Verifica si el contacto 502 coincide entre API y SQL">502 match</button>
-      </div>
-      <button type="button" class="run" id="go">Verificar</button>
-    </section>
-    <section class="panel" id="out">
-      <p class="hint">Elegí un atajo o escribí una pregunta. El resultado es un Finding (acta), no un chat.</p>
-    </section>
+    <div class="layout">
+      <section class="panel">
+        <label for="q">Pregunta de verificación</label>
+        <textarea id="q" placeholder="Ej: Verifica el mail del contacto 501 entre API y SQL"></textarea>
+        <div class="chips">
+          <button type="button" class="chip" data-q="Verifica el mail del contacto 501 entre API y SQL">501 mail</button>
+          <button type="button" class="chip" data-q="Verifica si la factura FC A 0003-00001890 existe en API y en SQL">Factura 404</button>
+          <button type="button" class="chip" data-q="Verifica el importe de la factura FC A 0001-00004500 entre API y SQL">Importe</button>
+          <button type="button" class="chip" data-q="Verifica si el contacto 502 coincide entre API y SQL">502 match</button>
+        </div>
+        <button type="button" class="run" id="go">Verificar</button>
+      </section>
+      <section class="panel" id="out">
+        <p class="hint">Elegí un atajo o escribí una pregunta. El resultado es un Finding (acta), no un chat.</p>
+      </section>
+    </div>
     <footer>Solo lectura. Datos sintéticos. Si Gemini está saturado vas a ver un 503: reintentá.</footer>
   </main>
   <script>
