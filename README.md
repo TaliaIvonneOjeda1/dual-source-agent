@@ -38,6 +38,25 @@ Tres mentiras plantadas en `data/seed.sql`:
 
 Control que coincide: contacto **502**.
 
+Gemini **elige** las tools. Python **compara**. El modelo no hace el diff.
+
+```mermaid
+flowchart LR
+  ui[Navegador_8000]
+  agent[Agente]
+  gemini[Gemini]
+  erp[ERP_mock_8001]
+  sql[SQLite]
+  diff[Python_diff]
+  ui --> agent
+  agent --> gemini
+  gemini -->|"elige tools"| agent
+  agent --> erp
+  agent --> sql
+  agent --> diff
+  diff --> ui
+```
+
 ## Demo para evaluadores (acceso)
 
 No hay URL en la nube: el camp pide llevar agentes a producción con honestidad, no un wrapper desplegado. El acceso es **este repo**. Todo se corre desde la carpeta del proyecto. Hay dos caminos.
