@@ -76,6 +76,8 @@ python scripts/run_agent.py
 
 Esperá a ver: `Uvicorn running on http://127.0.0.1:8000`.
 
+Eso **ya es el front**. No hay otro comando para “levantar la pantalla”. Abrí Chrome o Edge y pegá la URL (Enter). No la ejecutes en PowerShell.
+
 ### Navegador
 
 1. Abrí **http://127.0.0.1:8000** (esa es la demo; no es un chat).

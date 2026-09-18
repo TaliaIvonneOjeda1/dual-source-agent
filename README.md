@@ -83,7 +83,16 @@ python scripts/run_erp.py
 python scripts/run_agent.py
 ```
 
-Abrí **http://127.0.0.1:8000**. Tiene que decir **ERP listo**. Tocá un ejemplo a la izquierda (completa la caja) y dale a **Comparar**. No es un chatbot: ves API vs SQL lado a lado.
+Ese proceso **es** la interfaz. No hay un tercer `python` para el front. En Chrome o Edge pegá **http://127.0.0.1:8000** (no lo corras en la terminal). Tiene que decir **ERP listo**. Tocá un ejemplo a la izquierda (completa la caja) y dale a **Comparar**. No es un chatbot: ves API vs SQL lado a lado.
+
+Mapa de ventanas:
+
+| Ventana | Qué corre | La usás para |
+|---|---|---|
+| Terminal 1 | `run_erp.py` → puerto **8001** | Nada más. No escribas encima. |
+| Terminal 2 | `run_agent.py` → puerto **8000** | Nada más. Ahí vive el front. |
+| Navegador | http://127.0.0.1:8000 | Ver la pantalla, chips, Comparar. |
+| Terminal 3 (`(.venv)`) | libre | `python evals/run_evals.py` u otros comandos. |
 
 Si Gemini está saturado (503), reintentá. El modelo vigente está en `.env.example` (`GEMINI_MODEL`).
 
