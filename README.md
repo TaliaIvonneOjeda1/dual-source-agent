@@ -34,23 +34,32 @@ Control que coincide: contacto **502**.
 
 ## Demo para evaluadores (acceso)
 
-No hay URL en la nube: el camp pide llevar agentes a producción con honestidad, no un wrapper desplegado. El acceso es **este repo**. Hay dos caminos.
+No hay URL en la nube: el camp pide llevar agentes a producción con honestidad, no un wrapper desplegado. El acceso es **este repo**. Todo se corre desde la carpeta del proyecto. Hay dos caminos.
+
+### Setup (una vez)
+
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Si `python` no se reconoce, usá `py`. Hace falta Python 3.12+.
 
 ### Camino A — sin API key (30 segundos)
 
 Prueba el mock y el diff **sin Gemini**:
 
 ```powershell
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
 python scripts/check_erp.py
 python -m unittest tests.test_diff -v
 ```
 
+Esperado: `TODOS LOS CHEQUEOS OK` y 4 tests `OK`. Un aviso de Starlette/`httpx2` no es un error.
+
 `check_erp.py` siembra la base y afirma las 3 mentiras. `test_diff.py` cubre mismatch, missing, match e `insufficient_evidence`.
 
-### Camino B — demo live (los 2 comandos)
+### Camino B — interfaz live (2 procesos)
 
 Hace falta una key gratuita de [Google AI Studio](https://aistudio.google.com/apikey). Copiá `.env.example` → `.env` y pegá `GEMINI_API_KEY`. No subas ese archivo.
 
@@ -58,32 +67,23 @@ Hace falta una key gratuita de [Google AI Studio](https://aistudio.google.com/ap
 python scripts/seed.py
 ```
 
-**Comando 1** — ERP:
+**Terminal 1** — ERP. Dejala abierta cuando veas `Uvicorn running on http://127.0.0.1:8001`:
 
 ```powershell
 python scripts/run_erp.py
 ```
 
-**Comando 2** — agente (otra terminal):
+**Terminal 2** — agente (otra ventana; activá el venv si hace falta):
 
 ```powershell
 python scripts/run_agent.py
 ```
 
-Después de prender el agente, la interfaz está en **http://127.0.0.1:8000** (no es un chatbot: hay atajos para las 4 preguntas y el Finding se muestra como acta).
-
-```powershell
-python scripts/demo.py
-```
-
-O Swagger:
-
-- ERP Swagger: http://127.0.0.1:8001/docs → **Authorize** → `demo-token` → `GET /contactos/501`
-- Agente Swagger: http://127.0.0.1:8000/docs → `POST /agent/query` con `{"q":"Verifica el mail del contacto 501 entre API y SQL"}`
+Abrí **http://127.0.0.1:8000**. Tiene que decir **ERP listo**. Tocá un ejemplo a la izquierda (completa la caja) y dale a **Comparar**. No es un chatbot: ves API vs SQL lado a lado.
 
 Si Gemini está saturado (503), reintentá. El modelo vigente está en `.env.example` (`GEMINI_MODEL`).
 
-Pasos detallados y resultados esperados: [`docs/DEMO.md`](docs/DEMO.md).
+Paso a paso, tabla de resultados y qué hacer si falla: [`docs/DEMO.md`](docs/DEMO.md).
 
 ## Ejemplo de Finding
 
