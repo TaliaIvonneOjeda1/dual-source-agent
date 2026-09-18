@@ -51,18 +51,15 @@ Terminal 2:
 python scripts/run_agent.py
 ```
 
-http://127.0.0.1:8000 — el agente. Gemini elige tools; Python compara.
+http://127.0.0.1:8000 — interfaz del agente (GET `/`). Gemini elige tools; Python compara.
 
-Las 4 preguntas de la demo:
+Abrí **http://127.0.0.1:8000** y usá los atajos (501 mail, factura 404, importe, 502 match). También vale:
 
 ```powershell
 python scripts/demo.py
 ```
 
-### Desde el navegador
-
-- ERP: http://127.0.0.1:8001/docs → **Authorize** → `demo-token` (sin la palabra `Bearer`) → `GET /contactos/501`
-- Agente: http://127.0.0.1:8000/docs → `POST /agent/query` con cuerpo `{"q":"Verifica el mail del contacto 501 entre API y SQL"}`
+Swagger del ERP: http://127.0.0.1:8001/docs → **Authorize** → `demo-token`.
 
 Detalle de la API del mock (Postman / SQL equivalente): [`como_probar_erp.md`](como_probar_erp.md).
 

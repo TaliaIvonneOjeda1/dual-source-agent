@@ -1,15 +1,22 @@
 from __future__ import annotations
 
+import os
+from pathlib import Path
+
+import httpx
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from google.genai import errors as genai_errors
 from pydantic import BaseModel
 
 from agent.llm import run_query
 
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+
 app = FastAPI(
     title="dual-source-agent",
     version="0.1.0",
-    description="El modelo elige tools. Python compara API vs SQL. POST /agent/query con {\"q\": \"...\"}.",
+    description="El modelo elige tools. Python compara API vs SQL. UI en GET /.",
 )
 
 
@@ -17,9 +24,29 @@ class QueryIn(BaseModel):
     q: str
 
 
+@app.get("/")
+def home() -> FileResponse:
+    return FileResponse(STATIC_DIR / "index.html")
+
+
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok"}
+
+
+@app.get("/ready")
+def ready() -> dict:
+    erp_ok = False
+    try:
+        response = httpx.get(
+            os.getenv("ERP_API_BASE_URL", "http://127.0.0.1:8001").rstrip("/")
+            + "/health",
+            timeout=2.0,
+        )
+        erp_ok = response.status_code == 200
+    except httpx.HTTPError:
+        erp_ok = False
+    return {"agent": True, "erp": erp_ok}
 
 
 @app.post("/agent/query")

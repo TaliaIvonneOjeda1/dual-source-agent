@@ -70,13 +70,13 @@ python scripts/run_erp.py
 python scripts/run_agent.py
 ```
 
-Después:
+Después de prender el agente, la interfaz está en **http://127.0.0.1:8000** (no es un chatbot: hay atajos para las 4 preguntas y el Finding se muestra como acta).
 
 ```powershell
 python scripts/demo.py
 ```
 
-O en el navegador:
+O Swagger:
 
 - ERP Swagger: http://127.0.0.1:8001/docs → **Authorize** → `demo-token` → `GET /contactos/501`
 - Agente Swagger: http://127.0.0.1:8000/docs → `POST /agent/query` con `{"q":"Verifica el mail del contacto 501 entre API y SQL"}`
