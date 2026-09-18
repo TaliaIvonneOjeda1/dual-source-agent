@@ -16,6 +16,10 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+Tiene que verse `(.venv)` a la izquierda del prompt. El venv no se hereda: **cada terminal nueva** (y cada `+` en Cursor) hay que correr otra vez `.venv\Scripts\activate` antes de `python` o `pip`.
+
+Si Cursor avisa que instalaste paquetes en el entorno global y ofrece Create: **no**. Cerrá el aviso y activá `.venv`.
+
 Si `Activate.ps1` está bloqueado, en esa terminal: `Set-ExecutionPolicy -Scope Process Bypass`.
 
 ## 2. Camino A — sin Gemini (mock + diff)
@@ -53,6 +57,8 @@ python scripts/seed.py
 Esperado: `OK seed -> ...\data\erp.db`
 
 ### Terminal 1 — ERP (dejala abierta)
+
+Primero `.venv\Scripts\activate` (tiene que verse `(.venv)`). `seed.py` puede andar sin venv porque solo usa SQLite; `run_erp.py` no: necesita `uvicorn`.
 
 ```powershell
 python scripts/run_erp.py
@@ -92,6 +98,7 @@ El programa **no corrige** el ERP. Si hay desfasaje, la acción es que lo mire u
 | Qué ves | Qué suele ser |
 |---|---|
 | `python` no se reconoce | Usá `py` en lugar de `python` |
+| `No module named 'uvicorn'` / `'dotenv'` | Esa terminal no tiene `(.venv)`. Corré `.venv\Scripts\activate` y repetí el comando |
 | El agente arranca y la UI dice que falta el ERP | La terminal 1 se cerró o `run_erp.py` no quedó escuchando en 8001 |
 | Error 503 / saturado | Gemini a veces se satura. Reintentá en un minuto. El modelo está en `.env.example` (`GEMINI_MODEL`) |
 | Error 401 en el ERP | Token `demo-token` (en Swagger: Authorize → pegá solo `demo-token`) |
@@ -111,6 +118,8 @@ http://127.0.0.1:8001/docs → **Authorize** (candado) → `demo-token` (sin la 
 Detalle de pedidos y el SQL equivalente: [`como_probar_erp.md`](como_probar_erp.md).
 
 ## 6. Evals (live, necesita key + los 2 procesos)
+
+Otra terminal: activá el venv, con ERP y agente todavía corriendo.
 
 ```powershell
 python evals/run_evals.py

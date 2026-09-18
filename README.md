@@ -44,6 +44,10 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+Tiene que verse `(.venv)` a la izquierda del prompt. **Cada terminal nueva hay que activar de nuevo** (`.venv\Scripts\activate`). Si no, `python` es el de Windows y falla con `No module named 'uvicorn'` / `'dotenv'`.
+
+Si Cursor pregunta si querés crear un virtual environment: no le des a Create; activá el `.venv` que ya está.
+
 Si `python` no se reconoce, usá `py`. Hace falta Python 3.12+.
 
 ### Camino A — sin API key (30 segundos)
@@ -67,13 +71,13 @@ Hace falta una key gratuita de [Google AI Studio](https://aistudio.google.com/ap
 python scripts/seed.py
 ```
 
-**Terminal 1** — ERP. Dejala abierta cuando veas `Uvicorn running on http://127.0.0.1:8001`:
+**Terminal 1** — ERP. Activá el venv (`(.venv)` visible). Dejala abierta cuando veas `Uvicorn running on http://127.0.0.1:8001`:
 
 ```powershell
 python scripts/run_erp.py
 ```
 
-**Terminal 2** — agente (otra ventana; activá el venv si hace falta):
+**Terminal 2** — agente (otra ventana: otra vez `.venv\Scripts\activate`):
 
 ```powershell
 python scripts/run_agent.py
