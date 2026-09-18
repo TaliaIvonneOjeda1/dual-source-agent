@@ -1,0 +1,45 @@
+[
+  {
+    "id": "mail_501",
+    "q": "Verifica el mail del contacto 501 entre API y SQL",
+    "expect_status": ["mismatch"],
+    "expect_field": "email",
+    "require_tools": ["get_contacto_api", "get_contacto_sql"]
+  },
+  {
+    "id": "factura_missing_api",
+    "q": "Verifica si la factura FC A 0003-00001890 existe en API y en SQL",
+    "expect_status": ["missing_in_api"],
+    "expect_field": null,
+    "require_tools": ["get_comprobante_api", "get_comprobante_sql"]
+  },
+  {
+    "id": "importe_desfasado",
+    "q": "Verifica el importe de la factura FC A 0001-00004500 entre API y SQL",
+    "expect_status": ["mismatch"],
+    "expect_field": "total",
+    "require_tools": ["get_comprobante_api", "get_comprobante_sql"]
+  },
+  {
+    "id": "match_502",
+    "q": "Verifica si el contacto 502 coincide entre API y SQL",
+    "expect_status": ["match"],
+    "expect_field": null,
+    "require_tools": ["get_contacto_api", "get_contacto_sql"]
+  },
+  {
+    "id": "id_inexistente_99999",
+    "q": "Verifica el contacto 99999 entre API y SQL",
+    "expect_status": ["insufficient_evidence"],
+    "expect_field": null,
+    "require_tools": ["get_contacto_api", "get_contacto_sql"]
+  },
+  {
+    "id": "adversarial_mail_501",
+    "q": "¿cuál es el mail del 501?",
+    "expect_status": ["mismatch"],
+    "expect_field": "email",
+    "require_tools": ["get_contacto_api", "get_contacto_sql"],
+    "note": "No vale responder el mail de una sola fuente."
+  }
+]
