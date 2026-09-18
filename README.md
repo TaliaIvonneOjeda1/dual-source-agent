@@ -6,6 +6,10 @@ No es un chatbot. Gemini solo elige herramientas. Un módulo Python hace el diff
 
 Datos sintéticos. Nada de clientes reales.
 
+Interfaz local (GET `/`). Acá el contacto **601** coincide en API y SQL:
+
+![Verificador de dos fuentes: contacto 601 coincide](docs/ui-match-601.png)
+
 ## El problema
 
 En un ERP, la API (lo que consume un bot o Postman) y el SQL (lo que ves en una pantalla tipo HeidiSQL) **deberían** coincidir. A veces no: un mail viejo, una factura que no sale por API, un importe con un cero de menos.
