@@ -103,6 +103,7 @@ El programa **no corrige** el ERP. Si hay desfasaje, la acción es que lo mire u
 | `No module named 'uvicorn'` / `'dotenv'` | Esa terminal no tiene `(.venv)`. Corré `.venv\Scripts\activate` y repetí el comando |
 | El agente arranca y la UI dice que falta el ERP | La terminal 1 se cerró o `run_erp.py` no quedó escuchando en 8001 |
 | Error 503 / saturado | Gemini a veces se satura. Reintentá en un minuto. El modelo está en `.env.example` (`GEMINI_MODEL`) |
+| Error 429 / cuota / `RESOURCE_EXHAUSTED` | Cuota gratis de Gemini (unas 20 consultas al día en este modelo). Esperá un minuto y reintentá **una** vez. No es un bug del ERP. Camino A sigue andando |
 | Error 401 en el ERP | Token `demo-token` (en Swagger: Authorize → pegá solo `demo-token`) |
 
 ## 4. Opcional — script de las 4 preguntas

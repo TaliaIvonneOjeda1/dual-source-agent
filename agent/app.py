@@ -68,9 +68,20 @@ def query(body: QueryIn) -> dict:
     except RuntimeError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     except genai_errors.ClientError as exc:
+        text = str(exc)
+        if "429" in text or "RESOURCE_EXHAUSTED" in text:
+            raise HTTPException(
+                status_code=429,
+                detail=(
+                    "Se acabó la cuota gratis de Gemini por ahora "
+                    "(este modelo deja unas 20 consultas al día). "
+                    "Esperá un minuto y reintentá una sola vez. "
+                    "El mock y los tests (Camino A) no usan Gemini."
+                ),
+            ) from exc
         raise HTTPException(
             status_code=502,
-            detail=f"Gemini rechazó el pedido: {exc}",
+            detail="Gemini rechazó el pedido. Reintentá en un minuto.",
         ) from exc
     except genai_errors.ServerError as exc:
         raise HTTPException(

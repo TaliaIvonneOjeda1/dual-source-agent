@@ -94,7 +94,7 @@ Mapa de ventanas:
 | Navegador | http://127.0.0.1:8000 | Ver la pantalla, chips, Comparar. |
 | Terminal 3 (`(.venv)`) | libre | `python evals/run_evals.py` u otros comandos. |
 
-Si Gemini está saturado (503), reintentá. El modelo vigente está en `.env.example` (`GEMINI_MODEL`).
+Si Gemini está saturado (503) o cortó por cuota gratis (429), reintentá **una** vez al minuto. El modelo vigente está en `.env.example` (`GEMINI_MODEL`). El mock y los tests no usan Gemini.
 
 Paso a paso, tabla de resultados y qué hacer si falla: [`docs/DEMO.md`](docs/DEMO.md).
 
