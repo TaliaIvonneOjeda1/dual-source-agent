@@ -62,14 +62,23 @@
     label { display: block; font-weight: 600; margin-bottom: 0.4rem; }
     textarea {
       width: 100%;
-      min-height: 5.2rem;
+      min-height: 4.2rem;
       padding: 0.7rem 0.8rem;
       border: 1px solid var(--line);
       border-radius: 8px;
       font: inherit;
       resize: vertical;
     }
-    .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.7rem 0 0.9rem; }
+    .chip-groups { margin: 0.65rem 0 0.85rem; display: grid; gap: 0.55rem; }
+    .chip-group h3 {
+      margin: 0 0 0.28rem;
+      font-size: 0.72rem;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; }
     .chip {
       border: 1px solid var(--line);
       background: #f8fafc;
@@ -167,11 +176,33 @@
       <section class="panel">
         <label for="q">Pregunta de verificación</label>
         <textarea id="q" placeholder="Ej: Verifica el mail del contacto 501 entre API y SQL"></textarea>
-        <div class="chips">
-          <button type="button" class="chip" data-q="Verifica el mail del contacto 501 entre API y SQL">501 mail</button>
-          <button type="button" class="chip" data-q="Verifica si la factura FC A 0003-00001890 existe en API y en SQL">Factura 404</button>
-          <button type="button" class="chip" data-q="Verifica el importe de la factura FC A 0001-00004500 entre API y SQL">Importe</button>
-          <button type="button" class="chip" data-q="Verifica si el contacto 502 coincide entre API y SQL">502 match</button>
+        <div class="chip-groups">
+          <div class="chip-group">
+            <h3>Desfasajes</h3>
+            <div class="chips">
+              <button type="button" class="chip" data-q="Verifica el mail del contacto 501 entre API y SQL">501 mail</button>
+              <button type="button" class="chip" data-q="Verifica si la factura FC A 0003-00001890 existe en API y en SQL">Factura 404</button>
+              <button type="button" class="chip" data-q="Verifica el importe de la factura FC A 0001-00004500 entre API y SQL">Importe</button>
+            </div>
+          </div>
+          <div class="chip-group">
+            <h3>Coinciden</h3>
+            <div class="chips">
+              <button type="button" class="chip" data-q="Verifica si el contacto 502 coincide entre API y SQL">502 Luis</button>
+              <button type="button" class="chip" data-q="Verifica el contacto 503 entre API y SQL">503 Marta</button>
+              <button type="button" class="chip" data-q="Verifica el contacto 601 entre API y SQL">601 Sofia</button>
+              <button type="button" class="chip" data-q="Verifica la factura FC A 0003-00001891 entre API y SQL">FC 00001891</button>
+              <button type="button" class="chip" data-q="Verifica la nota de crédito NC A 0003-00000012 entre API y SQL">NC 00000012</button>
+            </div>
+          </div>
+          <div class="chip-group">
+            <h3>Bordes</h3>
+            <div class="chips">
+              <button type="button" class="chip" data-q="Verifica el contacto 99999 entre API y SQL">Id 99999</button>
+              <button type="button" class="chip" data-q="¿cuál es el mail del 501?">¿Mail del 501?</button>
+              <button type="button" class="chip" data-q="Verifica la factura FC Z 0009-00999999 entre API y SQL">Factura inventada</button>
+            </div>
+          </div>
         </div>
         <button type="button" class="run" id="go">Verificar</button>
       </section>
