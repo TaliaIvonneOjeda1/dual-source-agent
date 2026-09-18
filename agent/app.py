@@ -14,7 +14,7 @@ from agent.llm import run_query
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 app = FastAPI(
-    title="dual-source-agent",
+    title="Verificador de dos fuentes",
     version="0.1.0",
     description="El modelo elige tools. Python compara API vs SQL. UI en GET /.",
 )
