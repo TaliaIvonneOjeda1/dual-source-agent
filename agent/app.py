@@ -29,6 +29,18 @@ def home() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html")
 
 
+@app.get("/cv")
+def cv() -> FileResponse:
+    path = STATIC_DIR / "CV-Talia-Ojeda.pdf"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="CV no encontrado")
+    return FileResponse(
+        path,
+        media_type="application/pdf",
+        filename="CV-Talia-Ojeda.pdf",
+    )
+
+
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok"}
