@@ -112,7 +112,7 @@ def _coerce_args(args: dict) -> dict:
 
 def run_query(question: str) -> Finding:
     client = _client()
-    model = os.getenv("GEMINI_MODEL", "gemini-3.6-flash").strip() or "gemini-3.6-flash"
+    model = os.getenv("GEMINI_MODEL", "gemini-3-flash-preview").strip() or "gemini-3-flash-preview"
     tool = types.Tool(function_declarations=FUNCTION_DECLARATIONS)
     config = types.GenerateContentConfig(
         system_instruction=SYSTEM,
