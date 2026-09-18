@@ -9,6 +9,7 @@ from pathlib import Path
 import httpx
 from dotenv import load_dotenv
 
+from agent.guards import GuardError, clean_tool_args, erp_base_url, safe_db_path
 from agent.log import log_event
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,7 +17,7 @@ load_dotenv(ROOT / ".env")
 
 
 def _api_base() -> str:
-    return os.getenv("ERP_API_BASE_URL", "http://127.0.0.1:8001").rstrip("/")
+    return erp_base_url()
 
 
 def _token() -> str:
@@ -24,11 +25,16 @@ def _token() -> str:
 
 
 def _db_path() -> Path:
-    raw = os.getenv("ERP_DB_PATH", "data/erp.db")
-    path = Path(raw)
-    if not path.is_absolute():
-        path = ROOT / path
-    return path
+    return safe_db_path()
+
+
+def _connect() -> sqlite3.Connection:
+    path = _db_path()
+    if not path.exists():
+        raise GuardError("Falta la base data/erp.db. Corré: python scripts/seed.py")
+    conn = sqlite3.connect(path)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 def _headers() -> dict[str, str]:
@@ -43,9 +49,14 @@ def get_contacto_api(contacto_id: int) -> dict:
     """
     url = f"{_api_base()}/contactos/{contacto_id}"
     try:
-        response = httpx.get(url, headers=_headers(), timeout=5.0)
-    except httpx.HTTPError as exc:
-        payload = {"found": False, "source": "api", "error": str(exc)}
+        response = httpx.get(url, headers=_headers(), timeout=5.0, follow_redirects=False)
+    except httpx.HTTPError:
+        payload = {
+            "found": False,
+            "source": "api",
+            "error": "erp_unreachable",
+            "detail": "No pude hablar con el ERP (puerto 8001). ¿Está prendido python scripts/run_erp.py?",
+        }
         log_event({"tool": "get_contacto_api", "args": {"contacto_id": contacto_id}, "http_status": None, "ok": False})
         return payload
     log_event(
@@ -62,7 +73,6 @@ def get_contacto_api(contacto_id: int) -> dict:
         "found": False,
         "source": "api",
         "http_status": response.status_code,
-        "detail": response.text,
     }
 
 
@@ -72,8 +82,7 @@ def get_contacto_sql(contacto_id: int) -> dict:
     Args:
         contacto_id: ID numérico del contacto, por ejemplo 501.
     """
-    conn = sqlite3.connect(_db_path())
-    conn.row_factory = sqlite3.Row
+    conn = _connect()
     try:
         row = conn.execute(
             "SELECT id, empresa_id, nombre, email, telefono FROM contactos WHERE id = ?",
@@ -103,9 +112,14 @@ def get_comprobante_api(numero_completo: str) -> dict:
     """
     url = f"{_api_base()}/comprobantes/{numero_completo}"
     try:
-        response = httpx.get(url, headers=_headers(), timeout=5.0)
-    except httpx.HTTPError as exc:
-        payload = {"found": False, "source": "api", "error": str(exc)}
+        response = httpx.get(url, headers=_headers(), timeout=5.0, follow_redirects=False)
+    except httpx.HTTPError:
+        payload = {
+            "found": False,
+            "source": "api",
+            "error": "erp_unreachable",
+            "detail": "No pude hablar con el ERP (puerto 8001). ¿Está prendido python scripts/run_erp.py?",
+        }
         log_event(
             {
                 "tool": "get_comprobante_api",
@@ -129,7 +143,6 @@ def get_comprobante_api(numero_completo: str) -> dict:
         "found": False,
         "source": "api",
         "http_status": response.status_code,
-        "detail": response.text,
     }
 
 
@@ -139,8 +152,7 @@ def get_comprobante_sql(numero_completo: str) -> dict:
     Args:
         numero_completo: Número tal cual, por ejemplo 'FC A 0003-00001890'.
     """
-    conn = sqlite3.connect(_db_path())
-    conn.row_factory = sqlite3.Row
+    conn = _connect()
     try:
         row = conn.execute(
             """
@@ -175,7 +187,9 @@ DISPATCH = {
 
 
 def run_tool(name: str, args: dict) -> dict:
-    fn = DISPATCH.get(name)
-    if fn is None:
-        return {"found": False, "error": f"tool desconocida: {name}"}
-    return fn(**args)
+    try:
+        cleaned = clean_tool_args(name, args)
+        fn = DISPATCH[name]
+        return fn(**cleaned)
+    except GuardError as exc:
+        return {"found": False, "error": exc.public}

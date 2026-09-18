@@ -104,10 +104,7 @@ def _remember(gathered: dict, name: str, args: dict, result: dict) -> None:
 
 
 def _coerce_args(args: dict) -> dict:
-    out = dict(args)
-    if "contacto_id" in out:
-        out["contacto_id"] = int(out["contacto_id"])
-    return out
+    return dict(args)
 
 
 def run_query(question: str) -> Finding:
@@ -147,6 +144,13 @@ def run_query(question: str) -> Finding:
             name = fc.name or ""
             args = _coerce_args(dict(fc.args or {}))
             result = run_tool(name, args)
+            if result.get("error") == "erp_unreachable":
+                raise RuntimeError(
+                    result.get("detail")
+                    or "No pude hablar con el ERP (puerto 8001). ¿Está prendido python scripts/run_erp.py?"
+                )
+            if isinstance(result.get("error"), str) and "data/erp.db" in result["error"]:
+                raise RuntimeError(result["error"])
             _remember(gathered, name, args, result)
             label = name
             if "contacto_id" in args:

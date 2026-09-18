@@ -60,10 +60,10 @@ Prueba el mock y el diff **sin Gemini**:
 
 ```powershell
 python scripts/check_erp.py
-python -m unittest tests.test_diff -v
+python -m unittest discover -s tests -v
 ```
 
-Esperado: `TODOS LOS CHEQUEOS OK` y 4 tests `OK`. Un aviso de Starlette/`httpx2` no es un error.
+Esperado: `TODOS LOS CHEQUEOS OK` y todos los tests `OK`. Un aviso de Starlette/`httpx2` no es un error.
 
 `check_erp.py` siembra la base y afirma las 3 mentiras. `test_diff.py` cubre mismatch, missing, match e `insufficient_evidence`.
 
@@ -121,6 +121,23 @@ Paso a paso, tabla de resultados y qué hacer si falla: [`docs/DEMO.md`](docs/DE
 `status` puede ser: `match` | `mismatch` | `missing_in_api` | `missing_in_sql` | `insufficient_evidence`.
 
 Si no se llamaron las **dos** fuentes, el diff no inventa: `insufficient_evidence`.
+
+## Seguridad (v1, honesta)
+
+Esto corre en **127.0.0.1** con datos sintéticos. No está publicado en internet. Igual, como el repo es público, el código asume que alguien lo va a mirar con mala leche.
+
+Lo que ya está en código (alineado a [OWASP LLM Top 10 2025](https://owasp.org/www-project-top-10-for-large-language-model-applications/): prompt injection, agency de más, filtrado de secretos):
+
+- El modelo **solo elige** tools de lectura. Python compara. No hay INSERT/UPDATE/DELETE.
+- SQL **parametrizado**. No hay SQL libre.
+- Tools en allowlist; ids y números de factura se validan en Python (un `'; DROP TABLE` no pasa).
+- `ERP_API_BASE_URL` solo `127.0.0.1` / `localhost` (el agente no pega a un host raro).
+- La ruta de `erp.db` no puede salir del repo.
+- `GEMINI_API_KEY` vive en `.env` (servidor). El navegador no la ve. Los errores no dumpan el JSON de Google.
+- Cabeceras `X-Frame-Options: DENY`, `nosniff`, `no-store`. Tope de 10 consultas por minuto en `/agent/query`.
+- Si falta el ERP, la base o la key, la UI lo dice en castellano en vez de un traceback.
+
+Lo que **sigue siendo demo** a propósito: token `demo-token`, `/docs` abierto para evaluadores, Gemini free-tier a veces 429. En producción haría falta auth real, red privada y HITL de verdad.
 
 ## Evals
 

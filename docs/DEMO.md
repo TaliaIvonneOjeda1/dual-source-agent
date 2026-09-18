@@ -28,13 +28,13 @@ No hace falta `.env` ni API key.
 
 ```powershell
 python scripts/check_erp.py
-python -m unittest tests.test_diff -v
+python -m unittest discover -s tests -v
 ```
 
 Esperado:
 
 - `TODOS LOS CHEQUEOS OK` (las 3 mentiras + el control 502)
-- `Ran 4 tests` … `OK`
+- todos los tests `OK` (diff + validaciones)
 
 Si aparece un aviso `StarletteDeprecationWarning` / `httpx2`, ignorarlo: no es un error. El resultado que cuenta es el `OK` del final.
 
@@ -104,6 +104,7 @@ El programa **no corrige** el ERP. Si hay desfasaje, la acción es que lo mire u
 | El agente arranca y la UI dice que falta el ERP | La terminal 1 se cerró o `run_erp.py` no quedó escuchando en 8001 |
 | Error 503 / saturado | Gemini a veces se satura. Reintentá en un minuto. El modelo está en `.env.example` (`GEMINI_MODEL`) |
 | Error 429 / cuota / `RESOURCE_EXHAUSTED` | Cuota gratis de Gemini (unas 20 consultas al día en este modelo). Esperá un minuto y reintentá **una** vez. No es un bug del ERP. Camino A sigue andando |
+| Demasiadas consultas seguidas | Tope de 10 por minuto en la interfaz. Esperá un minuto |
 | Error 401 en el ERP | Token `demo-token` (en Swagger: Authorize → pegá solo `demo-token`) |
 
 ## 4. Opcional — script de las 4 preguntas

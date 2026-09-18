@@ -184,7 +184,7 @@
     <div class="layout">
       <section class="panel">
         <label for="q">Qué querés comparar</label>
-        <textarea id="q" placeholder="Ejemplo: ¿el mail del contacto 501 es el mismo en la API y en el SQL?"></textarea>
+        <textarea id="q" maxlength="400" placeholder="Ejemplo: ¿el mail del contacto 501 es el mismo en la API y en el SQL?"></textarea>
         <div class="chip-groups">
           <div class="chip-group">
             <h3>No coinciden (a propósito)</h3>
@@ -280,10 +280,19 @@
       try {
         const r = await fetch("/ready");
         const d = await r.json();
-        const erp = d.erp ? '<span class="ok">ERP listo</span>' : '<span class="bad">Falta prender el ERP (puerto 8001)</span>';
-        ready.innerHTML = erp + " · esta pantalla lista";
+        const bits = [];
+        bits.push(d.erp
+          ? '<span class="ok">ERP listo</span>'
+          : '<span class="bad">Falta prender el ERP (otra terminal: python scripts/run_erp.py, puerto 8001)</span>');
+        bits.push(d.db
+          ? '<span class="ok">base lista</span>'
+          : '<span class="bad">Falta la base (python scripts/seed.py)</span>');
+        bits.push(d.gemini_key
+          ? '<span class="ok">key de Gemini lista</span>'
+          : '<span class="bad">Falta GEMINI_API_KEY en .env</span>');
+        ready.innerHTML = bits.join(" · ");
       } catch {
-        ready.innerHTML = '<span class="bad">No pude hablar con el agente.</span>';
+        ready.innerHTML = '<span class="bad">No pude hablar con el agente (puerto 8000). ¿Sigue abierta la terminal de python scripts/run_agent.py?</span>';
       }
     }
 
@@ -291,6 +300,10 @@
       const question = q.value.trim();
       if (!question) {
         out.innerHTML = '<p class="err">Elegí un ejemplo de la izquierda o escribí qué contacto o factura querés comparar.</p>';
+        return;
+      }
+      if (question.length > 400) {
+        out.innerHTML = '<p class="err">Esa consulta es demasiado larga (máximo 400 caracteres).</p>';
         return;
       }
       go.disabled = true;
@@ -304,7 +317,8 @@
         const d = await r.json();
         if (!r.ok) {
           const msg = d.detail || r.statusText;
-          out.innerHTML = '<p class="err">Error ' + r.status + ": " + esc(typeof msg === "string" ? msg : JSON.stringify(msg)) + "</p>";
+          const text = typeof msg === "string" ? msg : "Algo falló. Revisá el aviso de arriba (ERP, base o key).";
+          out.innerHTML = '<p class="err">' + esc(text) + "</p>";
           return;
         }
         const ev = (d.evidence || []).map((e) => "<li>" + esc(e) + "</li>").join("");
@@ -323,7 +337,11 @@
           ${action}
         `;
       } catch (err) {
-        out.innerHTML = '<p class="err">' + esc(err.message) + "</p>";
+        const failed = String(err && err.message || "");
+        const text = /fetch|network|failed/i.test(failed)
+          ? "No pude hablar con el agente (puerto 8000). ¿Sigue abierta la terminal de python scripts/run_agent.py?"
+          : failed;
+        out.innerHTML = '<p class="err">' + esc(text) + "</p>";
       } finally {
         go.disabled = false;
       }
