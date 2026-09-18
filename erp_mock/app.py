@@ -7,7 +7,11 @@ from fastapi import Depends, FastAPI, HTTPException
 from erp_mock.auth import require_token
 from erp_mock.db import connect, row_to_dict
 
-app = FastAPI(title="ERP mock", version="0.1.0")
+app = FastAPI(
+    title="ERP mock",
+    version="0.1.0",
+    description="API desfasada a propósito (tablas `api_*`). En /docs: Authorize → `demo-token`.",
+)
 
 
 @app.get("/health")

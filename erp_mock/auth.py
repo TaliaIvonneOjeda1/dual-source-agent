@@ -1,10 +1,15 @@
-from fastapi import Header, HTTPException
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-EXPECTED = "Bearer demo-token"
+bearer = HTTPBearer(auto_error=False)
+EXPECTED = "demo-token"
 
 
-def require_token(authorization: str | None = Header(default=None)) -> None:
-    if authorization != EXPECTED:
+def require_token(
+    creds: HTTPAuthorizationCredentials | None = Depends(bearer),
+) -> None:
+    token = creds.credentials if creds is not None else None
+    if token != EXPECTED:
         raise HTTPException(
             status_code=401,
             detail="token inválido o ausente; usá Authorization: Bearer demo-token",

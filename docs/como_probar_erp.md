@@ -20,13 +20,15 @@ Crea `data/erp.db`. Ese archivo no se sube a GitHub.
 
 Queda en `http://127.0.0.1:8001`.
 
-## 3. Pedidos (Postman o el navegador)
+## 3. Pedidos (Postman, Swagger o el navegador)
 
 Header en todos menos `/health`:
 
 ```text
 Authorization: Bearer demo-token
 ```
+
+En http://127.0.0.1:8001/docs : botón **Authorize** (candado) → pegá `demo-token` (sin la palabra Bearer).
 
 | Pedido | Qué tenés que ver |
 |---|---|
