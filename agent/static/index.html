@@ -148,7 +148,11 @@
     }
     .action.none { background: #f0fdf4; border-color: #bbf7d0; }
     .err { color: #b91c1c; }
-    .hint { color: var(--muted); font-size: 0.9rem; }
+    .hint { color: var(--muted); font-size: 0.95rem; }
+    .empty-title { margin: 0 0 0.45rem; font-size: 1.05rem; }
+    .hint-steps { margin: 0.4rem 0 0; padding-left: 1.15rem; color: var(--muted); font-size: 0.92rem; }
+    .hint-steps li { margin: 0.28rem 0; }
+    .code { font-family: ui-monospace, Consolas, monospace; font-size: 0.78rem; color: var(--muted); }
     footer {
       margin-top: 1.1rem;
       padding: 0.95rem 1.1rem;
@@ -168,46 +172,52 @@
 <body>
   <header>
     <h1>dual-source-agent</h1>
-    <p>Verificación API REST vs SQL. Gemini elige tools; Python compara. El agente no escribe en el ERP.</p>
+    <p>Compara dos lugares de un ERP de prueba: la API y la base SQL. Si el mail o el importe no coinciden, te lo muestra. No cambia ningún dato.</p>
   </header>
   <main class="wrap">
     <p class="ready" id="ready">Chequeando ERP y agente…</p>
     <div class="layout">
       <section class="panel">
-        <label for="q">Pregunta de verificación</label>
-        <textarea id="q" placeholder="Ej: Verifica el mail del contacto 501 entre API y SQL"></textarea>
+        <label for="q">Qué querés comparar</label>
+        <textarea id="q" placeholder="Ejemplo: ¿el mail del contacto 501 es el mismo en la API y en el SQL?"></textarea>
         <div class="chip-groups">
           <div class="chip-group">
-            <h3>Desfasajes</h3>
+            <h3>No coinciden (a propósito)</h3>
             <div class="chips">
-              <button type="button" class="chip" data-q="Verifica el mail del contacto 501 entre API y SQL">501 mail</button>
-              <button type="button" class="chip" data-q="Verifica si la factura FC A 0003-00001890 existe en API y en SQL">Factura 404</button>
-              <button type="button" class="chip" data-q="Verifica el importe de la factura FC A 0001-00004500 entre API y SQL">Importe</button>
+              <button type="button" class="chip" data-q="Verifica el mail del contacto 501 entre API y SQL">501, mail distinto</button>
+              <button type="button" class="chip" data-q="Verifica si la factura FC A 0003-00001890 existe en API y en SQL">Factura que la API no tiene</button>
+              <button type="button" class="chip" data-q="Verifica el importe de la factura FC A 0001-00004500 entre API y SQL">Importe con un cero menos</button>
             </div>
           </div>
           <div class="chip-group">
-            <h3>Coinciden</h3>
+            <h3>Sí coinciden</h3>
             <div class="chips">
               <button type="button" class="chip" data-q="Verifica si el contacto 502 coincide entre API y SQL">502 Luis</button>
               <button type="button" class="chip" data-q="Verifica el contacto 503 entre API y SQL">503 Marta</button>
               <button type="button" class="chip" data-q="Verifica el contacto 601 entre API y SQL">601 Sofia</button>
-              <button type="button" class="chip" data-q="Verifica la factura FC A 0003-00001891 entre API y SQL">FC 00001891</button>
-              <button type="button" class="chip" data-q="Verifica la nota de crédito NC A 0003-00000012 entre API y SQL">NC 00000012</button>
+              <button type="button" class="chip" data-q="Verifica la factura FC A 0003-00001891 entre API y SQL">Factura 00001891</button>
+              <button type="button" class="chip" data-q="Verifica la nota de crédito NC A 0003-00000012 entre API y SQL">Nota de crédito</button>
             </div>
           </div>
           <div class="chip-group">
-            <h3>Bordes</h3>
+            <h3>Casos raros</h3>
             <div class="chips">
-              <button type="button" class="chip" data-q="Verifica el contacto 99999 entre API y SQL">Id 99999</button>
-              <button type="button" class="chip" data-q="¿cuál es el mail del 501?">¿Mail del 501?</button>
-              <button type="button" class="chip" data-q="Verifica la factura FC Z 0009-00999999 entre API y SQL">Factura inventada</button>
+              <button type="button" class="chip" data-q="Verifica el contacto 99999 entre API y SQL">Un id que no existe</button>
+              <button type="button" class="chip" data-q="¿cuál es el mail del 501?">“¿Cuál es el mail del 501?”</button>
+              <button type="button" class="chip" data-q="Verifica la factura FC Z 0009-00999999 entre API y SQL">Una factura inventada</button>
             </div>
           </div>
         </div>
-        <button type="button" class="run" id="go">Verificar</button>
+        <button type="button" class="run" id="go">Comparar</button>
       </section>
       <section class="panel" id="out">
-        <p class="hint">Elegí un atajo o escribí una pregunta. El resultado es un Finding (acta), no un chat.</p>
+        <h2 class="empty-title">Resultado</h2>
+        <p class="hint">Todavía no hay comparación.</p>
+        <ol class="hint-steps">
+          <li>A la izquierda tocá un ejemplo, o escribí un contacto (por ejemplo 501) o un número de factura.</li>
+          <li>Dale a <strong>Comparar</strong>.</li>
+          <li>Acá vas a ver, lado a lado, lo que dice la API y lo que dice la base. Si no coinciden, queda marcado para que lo mire una persona. No es un chat: no te inventa el dato.</li>
+        </ol>
       </section>
     </div>
     <footer>
@@ -218,7 +228,7 @@
         <a href="https://www.linkedin.com/in/taliaivonneojeda/" target="_blank" rel="noopener">LinkedIn</a>
         <a href="https://github.com/TaliaIvonneOjeda1/dual-source-agent" target="_blank" rel="noopener">Este repo</a>
       </div>
-      <p class="note">Solo lectura. Datos sintéticos. Si Gemini está saturado vas a ver un 503: reintentá.</p>
+      <p class="note">Datos de prueba, solo lectura. Si el servicio de IA está saturado, reintentá en un minuto.</p>
     </footer>
   </main>
   <script>
@@ -244,12 +254,29 @@
       return "insufficient_evidence";
     }
 
+    function statusLabel(status) {
+      const map = {
+        match: "Coinciden",
+        mismatch: "No coinciden",
+        missing_in_api: "Está en la base, no en la API",
+        missing_in_sql: "Está en la API, no en la base",
+        insufficient_evidence: "No hay datos suficientes",
+      };
+      return map[status] || status;
+    }
+
+    function entityLabel(entity) {
+      if (entity === "contacto") return "Contacto";
+      if (entity === "comprobante") return "Comprobante";
+      return "Dato";
+    }
+
     async function ping() {
       try {
         const r = await fetch("/ready");
         const d = await r.json();
-        const erp = d.erp ? '<span class="ok">ERP :8001 ok</span>' : '<span class="bad">ERP :8001 apagado</span>';
-        ready.innerHTML = erp + " · agente :8000 ok";
+        const erp = d.erp ? '<span class="ok">ERP listo</span>' : '<span class="bad">Falta prender el ERP (puerto 8001)</span>';
+        ready.innerHTML = erp + " · esta pantalla lista";
       } catch {
         ready.innerHTML = '<span class="bad">No pude hablar con el agente.</span>';
       }
@@ -258,11 +285,11 @@
     async function run() {
       const question = q.value.trim();
       if (!question) {
-        out.innerHTML = '<p class="err">Escribí o elegí una pregunta.</p>';
+        out.innerHTML = '<p class="err">Elegí un ejemplo de la izquierda o escribí qué contacto o factura querés comparar.</p>';
         return;
       }
       go.disabled = true;
-      out.innerHTML = "<p class=\"hint\">Gemini elige tools; Python compara… (5–20 s)</p>";
+      out.innerHTML = "<p class=\"hint\">Consultando la API y la base SQL… tarda unos segundos.</p>";
       try {
         const r = await fetch("/agent/query", {
           method: "POST",
@@ -277,14 +304,15 @@
         }
         const ev = (d.evidence || []).map((e) => "<li>" + esc(e) + "</li>").join("");
         const action = d.action === "revisar_humano"
-          ? '<div class="action">Acción: <strong>revisar_humano</strong> — el agente no corrige el ERP.</div>'
-          : '<div class="action none">Acción: ninguna. Las fuentes coinciden.</div>';
+          ? '<div class="action">Hay que revisarlo a mano. Este programa <strong>no corrige</strong> el ERP.</div>'
+          : '<div class="action none">No hace falta corregir: las dos fuentes dicen lo mismo.</div>';
         out.innerHTML = `
-          <p><span class="status ${badgeClass(d.status)}">${esc(d.status)}</span></p>
-          <p class="meta">${esc(d.entity)} · id ${esc(d.id)} ${d.field ? "· campo " + esc(d.field) : ""}</p>
+          <p><span class="status ${badgeClass(d.status)}">${esc(statusLabel(d.status))}</span>
+             <span class="code">${esc(d.status)}</span></p>
+          <p class="meta">${esc(entityLabel(d.entity))} ${esc(d.id || "")}${d.field ? " · campo " + esc(d.field) : ""}</p>
           <div class="cols">
-            <div class="src"><h3>API</h3><div class="val">${esc(d.api_value) || "—"}</div></div>
-            <div class="src"><h3>SQL</h3><div class="val">${esc(d.sql_value) || "—"}</div></div>
+            <div class="src"><h3>Lo que dice la API</h3><div class="val">${esc(d.api_value) || "—"}</div></div>
+            <div class="src"><h3>Lo que dice el SQL</h3><div class="val">${esc(d.sql_value) || "—"}</div></div>
           </div>
           <ul class="ev">${ev}</ul>
           ${action}
