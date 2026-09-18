@@ -1,5 +1,7 @@
 # dual-source-agent
 
+[![Camino A](https://github.com/TaliaIvonneOjeda1/dual-source-agent/actions/workflows/camino-a.yml/badge.svg)](https://github.com/TaliaIvonneOjeda1/dual-source-agent/actions/workflows/camino-a.yml)
+
 Agente en Python que **verifica si la API REST y el SQL de un ERP mock dicen lo mismo**.
 
 No es un chatbot. Gemini solo elige herramientas. Un módulo Python hace el diff. El hallazgo sale en JSON, con evidencia. El agente **no escribe** en el ERP.
