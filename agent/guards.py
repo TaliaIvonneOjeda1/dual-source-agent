@@ -6,7 +6,7 @@ import os
 import re
 import time
 from collections import deque
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,12 +34,22 @@ def gemini_key_set() -> bool:
     return bool(os.getenv("GEMINI_API_KEY", "").strip())
 
 
+def _is_outside_path(raw: str) -> bool:
+    native = Path(raw)
+    windows = PureWindowsPath(raw)
+    return bool(
+        native.is_absolute()
+        or windows.is_absolute()
+        or windows.drive
+        or raw.startswith(("\\\\", "//"))
+    )
+
+
 def safe_db_path(raw: str | None = None) -> Path:
     value = (raw or os.getenv("ERP_DB_PATH", "data/erp.db")).strip() or "data/erp.db"
-    path = Path(value)
-    if not path.is_absolute():
-        path = ROOT / path
-    resolved = path.resolve()
+    if _is_outside_path(value):
+        raise GuardError("La ruta de la base está fuera del proyecto.")
+    resolved = (ROOT / Path(value)).resolve()
     root = ROOT.resolve()
     try:
         resolved.relative_to(root)

@@ -56,6 +56,8 @@ class GuardTests(unittest.TestCase):
     def test_db_path_cannot_leave_repo(self) -> None:
         with self.assertRaises(GuardError):
             safe_db_path("C:/Windows/System32/drivers/etc/hosts")
+        with self.assertRaises(GuardError):
+            safe_db_path("/etc/hosts")
         with mock.patch.dict(os.environ, {"ERP_DB_PATH": "../fuera.db"}):
             with self.assertRaises(GuardError):
                 safe_db_path()
