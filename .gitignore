@@ -8,3 +8,7 @@ __pycache__/
 logs/*.jsonl
 .DS_Store
 Thumbs.db
+
+# Notas internas (no van al repo público)
+BITACORA.md
+docs/guia_para_explicar.md

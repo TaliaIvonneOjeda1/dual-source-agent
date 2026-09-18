@@ -83,7 +83,7 @@ O en el navegador:
 
 Si Gemini está saturado (503), reintentá. El modelo vigente está en `.env.example` (`GEMINI_MODEL`).
 
-Hoja más larga, con cada comando explicado: [`docs/guia_para_explicar.md`](docs/guia_para_explicar.md).
+Pasos detallados y resultados esperados: [`docs/DEMO.md`](docs/DEMO.md).
 
 ## Ejemplo de Finding
 
