@@ -8,7 +8,11 @@ No es un chatbot. Gemini solo elige herramientas. Un módulo Python hace el diff
 
 Datos sintéticos. Nada de clientes reales.
 
-Interfaz local (GET `/`). Acá el contacto **601** coincide en API y SQL:
+Interfaz local (GET `/`). El contacto **501** es una mentira plantada: el mail no coincide entre API y SQL.
+
+![Verificador de dos fuentes: contacto 501 no coincide](docs/ui-mismatch-501.png)
+
+Cuando sí coinciden (contacto **601**):
 
 ![Verificador de dos fuentes: contacto 601 coincide](docs/ui-match-601.png)
 
