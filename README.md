@@ -113,6 +113,8 @@ Si no se llamaron las **dos** fuentes, el diff no inventa: `insufficient_evidenc
 
 Seis casos live (`evals/cases.json`): 3 desfasajes, 1 match, id 99999, y un adversarial (“¿cuál es el mail del 501?”) para que no responda de una sola fuente.
 
+ERP y agente tienen que seguir prendidos. **Otra** terminal, con `(.venv)` visible (si no: `.venv\Scripts\activate`):
+
 ```powershell
 python evals/run_evals.py
 ```

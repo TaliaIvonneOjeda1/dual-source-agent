@@ -119,10 +119,13 @@ Detalle de pedidos y el SQL equivalente: [`como_probar_erp.md`](como_probar_erp.
 
 ## 6. Evals (live, necesita key + los 2 procesos)
 
-Otra terminal: activá el venv, con ERP y agente todavía corriendo.
+ERP (`run_erp.py`) y agente (`run_agent.py`) tienen que seguir corriendo. Abrí **otra** terminal (no uses las que tienen Uvicorn). Activá el venv y mirá que el prompt diga `(.venv)`:
 
 ```powershell
+.venv\Scripts\activate
 python evals/run_evals.py
 ```
+
+Un comando por línea. Si el prompt no muestra `(.venv)`, va a fallar con `No module named 'dotenv'`.
 
 Corrida de referencia: 6/6 (un caso requirió retry por 503 de Google).
